@@ -1,4 +1,5 @@
 ﻿using CourseGuide.Objects.Generics;
+using CourseGuide.Objects.Models.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -36,5 +37,8 @@ namespace CourseGuide.Objects.DTOs.Entities
 
         [JsonIgnore]
         public ICollection<RestaurantDTO>? RestaurantsDTO { get; set; }
+
+        [JsonIgnore]
+        public ICollection<ReservationDTO>? ReservationsDTO { get; set; }
     }
 }

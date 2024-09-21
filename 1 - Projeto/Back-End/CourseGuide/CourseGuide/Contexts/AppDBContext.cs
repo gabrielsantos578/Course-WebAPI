@@ -11,9 +11,11 @@ namespace CourseGuide.Contexts
 
         // Conjunto: Usuário
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<ReservationModel> Reservations { get; set; }
 
         // Conjunto: Restaurante
         public DbSet<RestaurantModel> Restaurants { get; set; }
+        public DbSet<TableModel> Tables { get; set; }
 
         // Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,9 +24,11 @@ namespace CourseGuide.Contexts
 
             // Entidades de Usuário:
             UserBuilder.Build(modelBuilder);
+            ReservationBuilder.Build(modelBuilder);
 
             // Entidades de Restaurante:
             RestaurantBuilder.Build(modelBuilder);
+            TableBuilder.Build(modelBuilder);
         }
     }
 }

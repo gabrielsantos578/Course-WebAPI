@@ -3,12 +3,12 @@ using CourseGuide.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Objects.Contracts;
-using CourseGuide.Repositories.Entities.Generics;
+using CourseGuide.Repositories.Entities.Generics.Methods;
 
 namespace CourseGuide.Repositories.Entities
 {
-    // Implementação do repositório de usuários, herda de IntRepository para suporte a ID int.
-    public class UserRepository : IntRepository<UserModel>, IUserRepository<UserModel>
+    // Implementação do repositório de usuários, herda de GetByIdIntRepository para suporte a ID int.
+    public class UserRepository : GetByIdIntRepository<UserModel>, IUserRepository<UserModel>
     {
         // Construtor que inicializa o contexto do banco de dados.
         public UserRepository(AppDBContext dbContext) : base(dbContext)

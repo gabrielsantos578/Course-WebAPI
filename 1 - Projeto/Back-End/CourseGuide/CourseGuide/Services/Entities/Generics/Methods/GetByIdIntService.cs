@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using CourseGuide.Objects.Generics;
-using CourseGuide.Repositories.Interfaces.Generics;
-using CourseGuide.Services.Interfaces.Generics;
+using CourseGuide.Repositories.Interfaces.Generics.Methods;
+using CourseGuide.Services.Interfaces.Generics.Methods;
 
-namespace CourseGuide.Services.Entities.Generics
+namespace CourseGuide.Services.Entities.Generics.Methods
 {
     // Serviço genérico para entidades identificadas por int, derivando de GenericService.
-    public class IntService<TDTO, TEntity> : GenericService<TDTO, TEntity>, IIntService<TDTO, TEntity> where TEntity : class, IEntityInt
+    public class GetByIdIntService<TDTO, TEntity> : GenericService<TDTO, TEntity>, IGetByIdIntService<TDTO, TEntity> where TEntity : class, IEntityInt
     {
-        protected readonly IIntRepository<TEntity> _repository; // Repositório específico para entidades com int.
+        protected readonly IGetByIdIntRepository<TEntity> _repository; // Repositório específico para entidades com int.
 
         // Construtor que recebe o repositório e o mapper.
-        public IntService(IIntRepository<TEntity> repository, IMapper mapper) : base(repository, mapper)
+        public GetByIdIntService(IGetByIdIntRepository<TEntity> repository, IMapper mapper) : base(repository, mapper)
         {
             _repository = repository; // Inicializa o repositório.
         }

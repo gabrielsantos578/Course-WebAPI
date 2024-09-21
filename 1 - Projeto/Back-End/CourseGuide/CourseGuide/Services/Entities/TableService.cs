@@ -3,12 +3,12 @@ using CourseGuide.Objects.DTOs.Entities;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Repositories.Interfaces;
 using CourseGuide.Services.Interfaces;
-using CourseGuide.Services.Entities.Generics;
+using CourseGuide.Services.Entities.Generics.Methods;
 
 namespace CourseGuide.Services.Entities
 {
-    // Serviço específico para a entidade Table, derivando de IntService.
-    public class TableService : IntService<TableDTO, TableModel>, ITableService
+    // Serviço específico para a entidade Table, derivando de GetByIdIntService.
+    public class TableService : GetByIdIntService<TableDTO, TableModel>, ITableService
     {
         private readonly ITableRepository<TableModel> _tableRepository; // Repositório específico para mesas.
 

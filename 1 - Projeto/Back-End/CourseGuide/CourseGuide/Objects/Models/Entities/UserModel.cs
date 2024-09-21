@@ -26,5 +26,6 @@ namespace CourseGuide.Objects.Models.Entities
 
 
         public ICollection<RestaurantModel>? RestaurantsModel { get; set; }
+        public ICollection<ReservationModel>? ReservationsModel { get; set; }
     }
 }

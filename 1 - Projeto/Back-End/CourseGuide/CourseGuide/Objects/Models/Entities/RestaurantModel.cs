@@ -23,7 +23,6 @@ namespace CourseGuide.Objects.Models.Entities
 
 
         public UserModel? OwnerModel { get; set; }
-
         public ICollection<TableModel>? TablesModel { get; set; }
     }
 }

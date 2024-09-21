@@ -3,12 +3,12 @@ using CourseGuide.Objects.DTOs.Entities;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Repositories.Interfaces;
 using CourseGuide.Services.Interfaces;
-using CourseGuide.Services.Entities.Generics;
+using CourseGuide.Services.Entities.Generics.Methods;
 
 namespace CourseGuide.Services.Entities
 {
-    // Serviço específico para a entidade Restaurant, derivando de IntService.
-    public class RestaurantService : IntService<RestaurantDTO, RestaurantModel>, IRestaurantService
+    // Serviço específico para a entidade Restaurant, derivando de GetByIdIntService.
+    public class RestaurantService : GetByIdIntService<RestaurantDTO, RestaurantModel>, IRestaurantService
     {
         private readonly IRestaurantRepository<RestaurantModel> _restaurantRepository; // Repositório específico para restaurantes.
 

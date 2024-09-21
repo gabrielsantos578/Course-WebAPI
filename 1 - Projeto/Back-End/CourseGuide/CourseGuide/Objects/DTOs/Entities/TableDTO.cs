@@ -10,7 +10,7 @@ namespace CourseGuide.Objects.DTOs.Entities
 
         [Required(ErrorMessage = "O número é requerido!")]
         [MaxLength(20)]
-        public string NumberTable { get; set; }
+        public string CodeTable { get; set; }
 
         [Required(ErrorMessage = "A capacidade é requerida!")]
         [MaxLength(2)]
@@ -21,14 +21,24 @@ namespace CourseGuide.Objects.DTOs.Entities
         public string LocationTable { get; set; }
 
         [Required(ErrorMessage = "O valor é requerido!")]
-        [Range(0, 999999999999.99, ErrorMessage = "O valor deve ter até 2 casas decimais!")]
-        public decimal ValueTable { get; set; }
+        public decimal ValueTable
+        {
+            get => _valueTable;
+            set => _valueTable = Math.Round(value, 2);
+        }
+        private decimal _valueTable;
 
+        public bool AvailableTable { get; set; }
+
+        [Required(ErrorMessage = "O restaurante é requerido!")]
         public int IdRestaurant { get; set; }
 
 
 
         [JsonIgnore]
         public RestaurantDTO? RestaurantDTO { get; set; }
+
+        [JsonIgnore]
+        public ICollection<ReservationDTO>? ReservationsDTO { get; set; }
     }
 }

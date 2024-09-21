@@ -17,9 +17,9 @@ namespace CourseGuide.Contexts.Builders
 
             // Configuração do relacionamento: Usuário -> Restaurantes
             modelBuilder.Entity<RestaurantModel>()
-                .HasOne(b => b.OwnerModel) // Um restaurante possui um dono.
-                .WithMany(c => c.RestaurantsModel) // Um dono pode ter muitos restaurantes.
-                .HasForeignKey(b => b.IdOwner) // Chave estrangeira referenciando o dono.
+                .HasOne(r => r.OwnerModel) // Um restaurante possui um dono.
+                .WithMany(u => u.RestaurantsModel) // Um dono pode ter muitos restaurantes.
+                .HasForeignKey(r => r.IdOwner) // Chave estrangeira referenciando o dono.
                 .OnDelete(DeleteBehavior.Cascade); // Deleção em cascata se o dono for removido.
         }
     }

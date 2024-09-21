@@ -4,12 +4,12 @@ using CourseGuide.Objects.DTOs.Entities;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Repositories.Interfaces;
 using CourseGuide.Services.Interfaces;
-using CourseGuide.Services.Entities.Generics;
+using CourseGuide.Services.Entities.Generics.Methods;
 
 namespace CourseGuide.Services.Entities
 {
-    // Serviço específico para a entidade User, derivando de IntService.
-    public class UserService : IntService<UserDTO, UserModel>, IUserService
+    // Serviço específico para a entidade User, derivando de GetByIdIntService.
+    public class UserService : GetByIdIntService<UserDTO, UserModel>, IUserService
     {
         private readonly IUserRepository<UserModel> _userRepository; // Repositório específico para usuários.
 

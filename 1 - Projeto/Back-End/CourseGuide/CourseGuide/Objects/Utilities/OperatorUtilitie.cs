@@ -49,5 +49,10 @@ namespace CourseGuide.Objects.Utilities
                 return builder.ToString();
             }
         }
+
+        public static bool IsEmpty(this string text)
+        {
+            return string.IsNullOrEmpty(text);
+        }
     }
 }
