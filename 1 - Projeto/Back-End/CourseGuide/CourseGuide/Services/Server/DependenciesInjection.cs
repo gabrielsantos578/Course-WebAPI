@@ -13,7 +13,11 @@ namespace CourseGuide.Services.Server
         {
             // Dependências: Usuário
             services.AddScoped<IUserRepository<UserModel>, UserRepository>();  // Registra o repositório de usuários como uma dependência Scoped.
-            services.AddScoped<IUserService, UserService>();                   // Registra o serviço de usuários como uma dependência Scoped.
+            services.AddScoped<IUserService, UserService>();  // Registra o serviço de usuários como uma dependência Scoped.
+
+            // Dependências: Restaurante
+            services.AddScoped<IRestaurantRepository<RestaurantModel>, RestaurantRepository>();  // Registra o repositório de restaurantes como uma dependência Scoped.
+            services.AddScoped<IRestaurantService, RestaurantService>();  // Registra o serviço de restaurantes como uma dependência Scoped.
         }
     }
 }

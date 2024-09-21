@@ -8,7 +8,7 @@ namespace CourseGuide.Contexts.Builders
         public static void Build(ModelBuilder modelBuilder)
         {
             // Configuração da entidade UserModel no Entity Framework.
-            modelBuilder.Entity<UserModel>().Property(u => u.Id); // Define a chave primária.
+            modelBuilder.Entity<UserModel>().Property(u => u.Id); // Propriedade do id.
             modelBuilder.Entity<UserModel>().Property(u => u.ImageProfile); // Propriedade opcional para imagem de perfil.
             modelBuilder.Entity<UserModel>().Property(u => u.NameUser).HasMaxLength(100).IsRequired(); // Nome do usuário, obrigatório.
             modelBuilder.Entity<UserModel>().Property(u => u.EmailUser).HasMaxLength(200).IsRequired(); // E-mail do usuário, obrigatório.

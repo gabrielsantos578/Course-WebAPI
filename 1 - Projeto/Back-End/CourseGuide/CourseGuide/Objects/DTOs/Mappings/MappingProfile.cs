@@ -10,6 +10,9 @@ namespace CourseGuide.Objects.DTOs.Mappings
         {
             // Entidades de Usuário:
             CreateMap<UserDTO, UserModel>().ReverseMap();
+
+            // Entidades de Restaurante:
+            CreateMap<RestaurantDTO, RestaurantModel>().ReverseMap();
         }
     }
 }
