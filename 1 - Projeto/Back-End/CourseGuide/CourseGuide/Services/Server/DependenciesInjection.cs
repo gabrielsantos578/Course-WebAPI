@@ -18,6 +18,14 @@ namespace CourseGuide.Services.Server
             // Dependências: Restaurante
             services.AddScoped<IRestaurantRepository<RestaurantModel>, RestaurantRepository>();  // Registra o repositório de restaurantes como uma dependência Scoped.
             services.AddScoped<IRestaurantService, RestaurantService>();  // Registra o serviço de restaurantes como uma dependência Scoped.
+
+            // Dependências: Mesa
+            services.AddScoped<ITableRepository<TableModel>, TableRepository>();  // Registra o repositório de restaurantes como uma dependência Scoped.
+            services.AddScoped<ITableService, TableService>();  // Registra o serviço de restaurantes como uma dependência Scoped.
+
+            // Dependências: Reserva
+            services.AddScoped<IReservationRepository<ReservationModel>, ReservationRepository>();  // Registra o repositório de restaurantes como uma dependência Scoped.
+            services.AddScoped<IReservationService, ReservationService>();  // Registra o serviço de restaurantes como uma dependência Scoped.
         }
     }
 }

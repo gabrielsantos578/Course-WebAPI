@@ -7,7 +7,7 @@ using CourseGuide.Repositories.Entities.Generics.Methods;
 namespace CourseGuide.Repositories.Entities
 {
     // Implementação do repositório de reservas, herda de GetByIdIntRepository para suporte a ID int.
-    public class ReservationRepository : GetByIdIntRepository<TableModel>, IReservationRepository<TableModel>
+    public class ReservationRepository : GetByIdIntRepository<ReservationModel>, IReservationRepository<ReservationModel>
     {
         // Construtor que inicializa o contexto do banco de dados.
         public ReservationRepository(AppDBContext dbContext) : base(dbContext)

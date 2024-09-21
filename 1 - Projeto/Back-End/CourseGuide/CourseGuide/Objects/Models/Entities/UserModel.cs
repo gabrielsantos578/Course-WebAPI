@@ -10,7 +10,7 @@ namespace CourseGuide.Objects.Models.Entities
         public int Id { get; set; }
 
         [Column("imageprofile")]
-        public string ImageProfile { get; set; }
+        public string? ImageProfile { get; set; }
 
         [Column("nameuser")]
         public string NameUser { get; set; }

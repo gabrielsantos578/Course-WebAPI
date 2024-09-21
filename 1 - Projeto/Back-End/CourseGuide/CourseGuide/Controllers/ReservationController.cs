@@ -6,6 +6,7 @@ using CourseGuide.Objects.Contracts;
 using System.ComponentModel.DataAnnotations;
 using CourseGuide.Objects.Utilities;
 using CourseGuide.Objects.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CourseGuide.Controllers
 {
@@ -111,6 +112,19 @@ namespace CourseGuide.Controllers
 
                 var reservationsRelatedTableDTO = await _reservationService.GetReservationsRelatedTable(reservationDTO.IdTable);
                 CheckDatas(tableDTO, reservationsRelatedTableDTO, reservationDTO, ref errors, ref hasErrors);
+
+                // Verifica se já existe um erro de data de reserva
+                if (!(errors is IDictionary<string, object> errorDict) || !errorDict.ContainsKey("errorDateReservation"))
+                {
+                    if (DateTime.TryParseExact(reservationDTO.DateReservation, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime dateReservation))
+                    {
+                        if (dateReservation.Date < DateTime.Now.Date)
+                        {
+                            errors.errorDateReservation = $"A data de reserva {reservationDTO.DateReservation} é inválida! Informe uma data para o dia atual ou após.";
+                            hasErrors = true;
+                        }
+                    }
+                }
 
                 if (hasErrors)
                 {
@@ -305,7 +319,7 @@ namespace CourseGuide.Controllers
                     _response.Data = new { errorId = "Reserva não encontrada!" };
                     return NotFound(_response);
                 }
-                else if (!reservationDTO.CanInProgress())
+                else if (!reservationDTO.CanFinish())
                 {
                     if (reservationDTO.Status == StatusReservation.Finished)
                     {
@@ -395,7 +409,7 @@ namespace CourseGuide.Controllers
                     CalculatePrice(ref reservationDTO, tableDTO);
                 }
 
-                reservationDTO.Finish();
+                reservationDTO.Block();
                 await _reservationService.Update(reservationDTO);
 
                 _response.SetSuccess();
@@ -449,6 +463,8 @@ namespace CourseGuide.Controllers
             {
                 errors.errorIdTable = "A Mesa " + table.CodeTable + " está indisponível para reserva!";
                 hasErrors = true;
+
+                return;
             }
 
             if (!DateTime.TryParseExact(reservationDTO.DateReservation, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out _))

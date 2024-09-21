@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CourseGuide.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240921085838_Database_v.1")]
+    [Migration("20240921091146_Database_v.1")]
     partial class Database_v1
     {
         /// <inheritdoc />
@@ -186,7 +186,6 @@ namespace CourseGuide.Migrations
                         .HasColumnName("emailuser");
 
                     b.Property<string>("ImageProfile")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("imageprofile");
 

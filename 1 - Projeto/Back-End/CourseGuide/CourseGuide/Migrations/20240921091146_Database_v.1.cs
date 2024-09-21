@@ -17,7 +17,7 @@ namespace CourseGuide.Migrations
                 {
                     iduser = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    imageprofile = table.Column<string>(type: "text", nullable: false),
+                    imageprofile = table.Column<string>(type: "text", nullable: true),
                     nameuser = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     emailuser = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     passworduser = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),

@@ -183,7 +183,6 @@ namespace CourseGuide.Migrations
                         .HasColumnName("emailuser");
 
                     b.Property<string>("ImageProfile")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("imageprofile");
 
