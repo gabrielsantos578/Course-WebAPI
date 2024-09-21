@@ -7,28 +7,28 @@ namespace CourseGuide.Contexts.Builders
     {
         public static void Build(ModelBuilder modelBuilder)
         {
-            // Builder
-            modelBuilder.Entity<UserModel>().HasKey(u => u.Id);
-            modelBuilder.Entity<UserModel>().Property(u => u.ImageProfile);
-            modelBuilder.Entity<UserModel>().Property(u => u.NameUser).HasMaxLength(100).IsRequired();
-            modelBuilder.Entity<UserModel>().Property(u => u.EmailUser).HasMaxLength(200).IsRequired();
-            modelBuilder.Entity<UserModel>().Property(u => u.PasswordUser).HasMaxLength(256).IsRequired();
-            modelBuilder.Entity<UserModel>().Property(u => u.PhoneUser).HasMaxLength(15).IsRequired();
+            // Configuração da entidade UserModel no Entity Framework.
+            modelBuilder.Entity<UserModel>().Property(u => u.Id); // Define a chave primária.
+            modelBuilder.Entity<UserModel>().Property(u => u.ImageProfile); // Propriedade opcional para imagem de perfil.
+            modelBuilder.Entity<UserModel>().Property(u => u.NameUser).HasMaxLength(100).IsRequired(); // Nome do usuário, obrigatório.
+            modelBuilder.Entity<UserModel>().Property(u => u.EmailUser).HasMaxLength(200).IsRequired(); // E-mail do usuário, obrigatório.
+            modelBuilder.Entity<UserModel>().Property(u => u.PasswordUser).HasMaxLength(256).IsRequired(); // Senha do usuário, obrigatória.
+            modelBuilder.Entity<UserModel>().Property(u => u.PhoneUser).HasMaxLength(15).IsRequired(); // Telefone do usuário, obrigatório.
 
+            modelBuilder.Entity<UserModel>().HasKey(u => u.Id); // Define a chave primária.
 
-            // Inserções
+            // Inserção de dados iniciais na tabela de Usuários.
             modelBuilder.Entity<UserModel>().HasData(
                 new UserModel
                 {
-                    Id = 1,
-                    NameUser = "Master",
-                    EmailUser = "master@development.com",
-                    PasswordUser = "99db87c3278f5eaa517260eaaa2b4b376be63d7f8a79c0f43992a493a3de8fc9",
-                    PhoneUser = "",
-                    ImageProfile = ""
+                    Id = 1, // ID do usuário.
+                    NameUser = "Master", // Nome do usuário.
+                    EmailUser = "master@development.com", // E-mail do usuário.
+                    PasswordUser = "99db87c3278f5eaa517260eaaa2b4b376be63d7f8a79c0f43992a493a3de8fc9", // Senha já hasheada, utilizando SHA256.
+                    PhoneUser = "", // Telefone (opcional).
+                    ImageProfile = "" // Imagem de perfil (opcional).
                 }
             );
         }
     }
-
 }

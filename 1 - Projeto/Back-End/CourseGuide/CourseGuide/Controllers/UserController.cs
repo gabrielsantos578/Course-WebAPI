@@ -71,8 +71,48 @@ namespace CourseGuide.Controllers
             }
         }
 
+        [HttpGet("GetByToken/{token}")]
+        public async Task<ActionResult<UserDTO>> GetByToken(string token)
+        {
+            try
+            {
+                var tokenObject = new Token { TokenAccess = token };
+                var email = tokenObject.ExtractSubject();
+
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var user = await _userService.GetByEmail(email);
+
+                    if (user != null)
+                    {
+                        _response.SetSuccess();
+                        _response.Message = "Usuário " + user.NameUser + " obtido com sucesso.";
+                        _response.Data = user;
+                        return Ok(_response);
+                    }
+
+                    _response.SetUnauthorized();
+                    _response.Message = "Token inválido!";
+                    _response.Data = new { errorToken = "Token inválido!" };
+                    return BadRequest(_response);
+                }
+
+                _response.SetUnauthorized();
+                _response.Message = "Token inválido!";
+                _response.Data = new { errorToken = "Token inválido!" };
+                return BadRequest(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.SetError();
+                _response.Message = "Não foi possível adquirir o Usuário informado!";
+                _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
         [HttpPost("Create")]
-        public async Task<ActionResult> Create([FromBody] UserDTO userDTO)
+        public async Task<ActionResult<UserDTO>> Create([FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
             {
@@ -127,7 +167,7 @@ namespace CourseGuide.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Login([FromBody] Login login)
+        public async Task<ActionResult<Token>> Login([FromBody] Login login)
         {
             if (login is null)
             {
@@ -167,7 +207,7 @@ namespace CourseGuide.Controllers
         }
 
         [HttpPost("Validate")]
-        public async Task<ActionResult> Validate([FromBody] Token token)
+        public async Task<ActionResult<Token>> Validate([FromBody] Token token)
         {
             if (token is null)
             {
@@ -212,7 +252,7 @@ namespace CourseGuide.Controllers
 
 
         [HttpPut("Update")]
-        public async Task<ActionResult> Update([FromBody] UserDTO userDTO)
+        public async Task<ActionResult<UserDTO>> Update([FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
             {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SGnA4tTtdVg/SSHvxMz15wVgS/kUE9yU74GDvQhG8aUj9YR1GYXOFvA2SGixQV6DnhjYeVlU06eT3i7C5LCysA==",
+  "dgSpecHash": "ITWKkqphHzVqlzrtmgIaykfH9hnDWpD2M6tIEoSuKX1EMLblc/CsAOHdTTKL704StYQW0SwAi/N/Q5M8C6pLCg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
+  "projectFilePath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\01 - Course\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\santo\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\santo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

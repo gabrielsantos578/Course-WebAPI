@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CourseGuide.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240824083603_Database_v.1")]
+    [Migration("20240921040056_Database_v.1")]
     partial class Database_v1
     {
         /// <inheritdoc />

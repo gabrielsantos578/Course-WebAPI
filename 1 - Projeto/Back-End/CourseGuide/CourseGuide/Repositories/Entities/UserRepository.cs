@@ -3,61 +3,30 @@ using CourseGuide.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Objects.Contracts;
+using CourseGuide.Repositories.Entities.Generics;
 
 namespace CourseGuide.Repositories.Entities
 {
-    public class UserRepository : IUserRepository
+    // Implementação do repositório de usuários, herda de IntRepository para suporte a ID int.
+    public class UserRepository : IntRepository<UserModel>, IUserRepository<UserModel>
     {
-
-        private readonly AppDBContext _dbContext;
-
-        public UserRepository(AppDBContext dbContext)
+        // Construtor que inicializa o contexto do banco de dados.
+        public UserRepository(AppDBContext dbContext) : base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<UserModel>> GetAll()
-        {
-            return await _dbContext.Users.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<UserModel> GetById(int id)
-        {
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
-        }
-
+        // Método para buscar um usuário pelo email.
         public async Task<UserModel> GetByEmail(string email)
         {
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.EmailUser == email);
+            // Busca um usuário com o email fornecido.
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.EmailUser == email);
         }
 
+        // Método para autenticar um usuário com credenciais de login.
         public async Task<UserModel> Login(Login login)
         {
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.EmailUser == login.Email && u.PasswordUser == login.Password);
-        }
-
-        public async Task<UserModel> Create(UserModel userModel)
-        {
-            _dbContext.Users.Add(userModel);
-            await _dbContext.SaveChangesAsync();
-
-            return userModel;
-        }
-
-        public async Task<UserModel> Update(UserModel userModel)
-        {
-            _dbContext.Entry(userModel).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-
-            return userModel;
-        }
-
-        public async Task<UserModel> Delete(UserModel userModel)
-        {
-            _dbContext.Users.Remove(userModel);
-            await _dbContext.SaveChangesAsync();
-
-            return userModel;
+            // Busca um usuário com o email e senha fornecidos.
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.EmailUser == login.Email && u.PasswordUser == login.Password);
         }
     }
 }

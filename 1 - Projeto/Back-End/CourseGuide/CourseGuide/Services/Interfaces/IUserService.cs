@@ -1,16 +1,14 @@
 ﻿using CourseGuide.Objects.Contracts;
 using CourseGuide.Objects.DTOs.Entities;
+using CourseGuide.Objects.Models.Entities;
+using CourseGuide.Services.Interfaces.Generics;
 
 namespace CourseGuide.Services.Interfaces
 {
-    public interface IUserService
+    // Interface de serviço para operações relacionadas a usuários, estendendo IIntService.
+    public interface IUserService : IIntService<UserDTO, UserModel>
     {
-        Task<IEnumerable<UserDTO>> GetAll();
-        Task<UserDTO> GetById(int id);
-        Task<UserDTO> GetByEmail(string email);
-        Task<UserDTO> Login(Login login);
-        Task Create(UserDTO userDTO);
-        Task Update(UserDTO userDTO);
-        Task Delete(UserDTO userDTO);
+        Task<UserDTO> GetByEmail(string email);  // Método para obter um usuário pelo seu email, retornando um DTO.
+        Task<UserDTO> Login(Login login);  // Método para realizar login de um usuário, retornando um DTO.
     }
 }

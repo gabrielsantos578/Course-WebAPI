@@ -4,76 +4,82 @@ using CourseGuide.Objects.DTOs.Entities;
 using CourseGuide.Objects.Models.Entities;
 using CourseGuide.Repositories.Interfaces;
 using CourseGuide.Services.Interfaces;
+using CourseGuide.Services.Entities.Generics;
 
 namespace CourseGuide.Services.Entities
 {
-    public class UserService : IUserService
+    // Serviço específico para a entidade User, derivando de IntService.
+    public class UserService : IntService<UserDTO, UserModel>, IUserService
     {
+        private readonly IUserRepository<UserModel> _userRepository; // Repositório específico para usuários.
 
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        // Construtor que inicializa o repositório e o mapper.
+        public UserService(IUserRepository<UserModel> userRepository, IMapper mapper) : base(userRepository, mapper)
         {
             _userRepository = userRepository;
-            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAll()
+        // Sobrescreve o método GetAll para não expor a senha dos usuários.
+        public override async Task<IEnumerable<UserDTO>> GetAll()
         {
-            var usersModel = await _userRepository.GetAll();
+            var users = await base.GetAll();
+            foreach (var user in users) { user.PasswordUser = ""; } // Limpa a senha antes de retornar.
 
-            usersModel.ToList().ForEach(u => u.PasswordUser = "");
-            return _mapper.Map<IEnumerable<UserDTO>>(usersModel);
+            return users;
         }
 
-        public async Task<UserDTO> GetById(int id)
+        // Sobrescreve o método GetById para não expor a senha do usuário.
+        public override async Task<UserDTO> GetById(int id)
         {
-            var userModel = await _userRepository.GetById(id);
+            var user = await base.GetById(id);
+            if (user != null) user.PasswordUser = ""; // Limpa a senha se o usuário existir.
 
-            if (userModel != null) userModel.PasswordUser = "";
-            return _mapper.Map<UserDTO>(userModel);
+            return user;
         }
 
+        // Método para obter um usuário pelo email, sem expor a senha.
         public async Task<UserDTO> GetByEmail(string email)
         {
-            var userModel = await _userRepository.GetByEmail(email);
+            var user = await _userRepository.GetByEmail(email);
+            if (user != null) user.PasswordUser = ""; // Limpa a senha se o usuário existir.
 
-            if (userModel != null) userModel.PasswordUser = "";
-            return _mapper.Map<UserDTO>(userModel);
+            return _mapper.Map<UserDTO>(user); // Mapeia o usuário para um DTO.
         }
 
+        // Método para realizar login, sem expor a senha.
         public async Task<UserDTO> Login(Login login)
         {
-            var userModel = await _userRepository.Login(login);
+            var user = await _userRepository.Login(login);
+            if (user != null) user.PasswordUser = ""; // Limpa a senha se o usuário existir.
 
-            if (userModel != null) userModel.PasswordUser = "";
-            return _mapper.Map<UserDTO>(userModel);
+            return _mapper.Map<UserDTO>(user); // Mapeia o usuário para um DTO.
         }
 
-        public async Task Create(UserDTO userDTO)
+        // Sobrescreve o método Create para garantir que a senha não seja retornada.
+        public override async Task<UserDTO> Create(UserDTO userDTO)
         {
-            var userModel = _mapper.Map<UserModel>(userDTO);
-            await _userRepository.Create(userModel);
+            await base.Create(userDTO);
+            userDTO.PasswordUser = ""; // Limpa a senha após a criação.
 
-            userDTO.Id = userModel.Id;
-            userDTO.PasswordUser = "";
+            return userDTO;
         }
 
-        public async Task Update(UserDTO userDTO)
+        // Sobrescreve o método Update para garantir que a senha não seja retornada.
+        public override async Task<UserDTO> Update(UserDTO userDTO)
         {
-            var userModel = _mapper.Map<UserModel>(userDTO);
-            await _userRepository.Update(userModel);
+            await base.Update(userDTO);
+            userDTO.PasswordUser = ""; // Limpa a senha após a atualização.
 
-            userDTO.PasswordUser = "";
+            return userDTO;
         }
 
-        public async Task Delete(UserDTO userDTO)
+        // Sobrescreve o método Delete para garantir que a senha não seja retornada.
+        public override async Task<UserDTO> Delete(UserDTO userDTO)
         {
-            var userModel = _mapper.Map<UserModel>(userDTO);
-            await _userRepository.Delete(userModel);
+            await base.Delete(userDTO);
+            userDTO.PasswordUser = ""; // Limpa a senha após a exclusão.
 
-            userDTO.PasswordUser = "";
+            return userDTO;
         }
     }
 }

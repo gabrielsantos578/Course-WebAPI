@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CourseGuide.Objects.Generics;
+using System.ComponentModel.DataAnnotations;
 
 namespace CourseGuide.Objects.DTOs.Entities
 {
-    public class UserDTO
+    public class UserDTO : IEntityInt
     {
         public int Id { get; set; }
 

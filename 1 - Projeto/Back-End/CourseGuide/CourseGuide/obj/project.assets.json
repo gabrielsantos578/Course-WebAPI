@@ -5030,11 +5030,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
+      "projectUniqueName": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\01 - Course\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
       "projectName": "CourseGuide",
-      "projectPath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
+      "projectPath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\01 - Course\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\CourseGuide.csproj",
       "packagesPath": "C:\\Users\\santo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\obj\\",
+      "outputPath": "C:\\Users\\santo\\OneDrive\\Área de Trabalho\\GitHub\\01 - Course\\Course-WebAPI\\1 - Projeto\\Back-End\\CourseGuide\\CourseGuide\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

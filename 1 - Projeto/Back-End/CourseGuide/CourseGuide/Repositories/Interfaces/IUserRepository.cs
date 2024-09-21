@@ -1,17 +1,14 @@
 ﻿using CourseGuide.Objects.Contracts;
+using CourseGuide.Objects.Generics;
 using CourseGuide.Objects.Models.Entities;
-using Microsoft.EntityFrameworkCore;
+using CourseGuide.Repositories.Interfaces.Generics;
 
 namespace CourseGuide.Repositories.Interfaces
 {
-    public interface IUserRepository
+    // Interface para o repositório de usuários, herda de IIntRepository para suporte a operações com ID int.
+    public interface IUserRepository<T> : IIntRepository<T> where T : class, IEntityInt
     {
-        Task<IEnumerable<UserModel>> GetAll();
-        Task<UserModel> GetById(int id);
-        Task<UserModel> GetByEmail(string email);
-        Task<UserModel> Login(Login login);
-        Task<UserModel> Create(UserModel userModel);
-        Task<UserModel> Update(UserModel userModel);
-        Task<UserModel> Delete(UserModel userModel);
+        Task<UserModel> GetByEmail(string email);  // Método para buscar um usuário pelo email.
+        Task<UserModel> Login(Login login);        // Método para autenticar um usuário com credenciais de login.
     }
 }
