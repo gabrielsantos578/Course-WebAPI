@@ -23,5 +23,8 @@ namespace CourseGuide.Objects.Models.Entities
 
         [Column("phoneuser")]
         public string PhoneUser { get; set; }
+
+
+        public ICollection<RestaurantModel>? RestaurantsModel { get; set; }
     }
 }

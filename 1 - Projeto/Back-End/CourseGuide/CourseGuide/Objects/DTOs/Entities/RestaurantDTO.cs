@@ -8,7 +8,7 @@ namespace CourseGuide.Objects.DTOs.Entities
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O nome do restaurante é requerido!")]
+        [Required(ErrorMessage = "O nome é requerido!")]
         [MaxLength(100)]
         public string NameRestaurant { get; set; }
 
@@ -32,5 +32,8 @@ namespace CourseGuide.Objects.DTOs.Entities
 
         [JsonIgnore]
         public UserDTO? OwnerDTO { get; set; }
+
+        [JsonIgnore]
+        public ICollection<TableDTO>? TablesDTO { get; set; }
     }
 }

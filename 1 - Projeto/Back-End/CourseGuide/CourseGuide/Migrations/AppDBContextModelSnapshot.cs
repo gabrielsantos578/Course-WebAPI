@@ -39,16 +39,13 @@ namespace CourseGuide.Migrations
 
                     b.Property<int>("IdOwner")
                         .HasColumnType("integer")
-                        .HasColumnName("iduser");
+                        .HasColumnName("idowner");
 
                     b.Property<string>("NameRestaurant")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("namerestaurant");
-
-                    b.Property<int?>("OwnerModelId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("PhoneRestaurant")
                         .IsRequired()
@@ -58,9 +55,51 @@ namespace CourseGuide.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerModelId");
+                    b.HasIndex("IdOwner");
 
                     b.ToTable("restaurants");
+                });
+
+            modelBuilder.Entity("CourseGuide.Objects.Models.Entities.TableModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("idtable");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CapacityTable")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("capacitytable");
+
+                    b.Property<int>("IdRestaurant")
+                        .HasColumnType("integer")
+                        .HasColumnName("idrestaurant");
+
+                    b.Property<string>("LocationTable")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("locationtable");
+
+                    b.Property<string>("NumberTable")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("numbertable");
+
+                    b.Property<int?>("RestaurantModelId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("ValueTable")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("valuetable");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantModelId");
+
+                    b.ToTable("tables");
                 });
 
             modelBuilder.Entity("CourseGuide.Objects.Models.Entities.UserModel", b =>
@@ -120,10 +159,31 @@ namespace CourseGuide.Migrations
             modelBuilder.Entity("CourseGuide.Objects.Models.Entities.RestaurantModel", b =>
                 {
                     b.HasOne("CourseGuide.Objects.Models.Entities.UserModel", "OwnerModel")
-                        .WithMany()
-                        .HasForeignKey("OwnerModelId");
+                        .WithMany("RestaurantsModel")
+                        .HasForeignKey("IdOwner")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("OwnerModel");
+                });
+
+            modelBuilder.Entity("CourseGuide.Objects.Models.Entities.TableModel", b =>
+                {
+                    b.HasOne("CourseGuide.Objects.Models.Entities.RestaurantModel", "RestaurantModel")
+                        .WithMany("TablesModel")
+                        .HasForeignKey("RestaurantModelId");
+
+                    b.Navigation("RestaurantModel");
+                });
+
+            modelBuilder.Entity("CourseGuide.Objects.Models.Entities.RestaurantModel", b =>
+                {
+                    b.Navigation("TablesModel");
+                });
+
+            modelBuilder.Entity("CourseGuide.Objects.Models.Entities.UserModel", b =>
+                {
+                    b.Navigation("RestaurantsModel");
                 });
 #pragma warning restore 612, 618
         }

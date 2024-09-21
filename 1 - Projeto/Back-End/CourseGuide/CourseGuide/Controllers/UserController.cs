@@ -9,86 +9,126 @@ namespace CourseGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RestaurantController : Controller
+    public class UserController : Controller
     {
-        private readonly IRestaurantService _restaurantService;
+        private readonly IUserService _userService;
         private readonly Response _response;
 
-        public RestaurantController(IRestaurantService restaurantService)
+        public UserController(IUserService userService)
         {
-            _restaurantService = restaurantService;
+            _userService = userService;
 
             _response = new Response();
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<RestaurantDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
         {
             try
             {
-                var restaurantsDTO = await _restaurantService.GetAll();
+                var usersDTO = await _userService.GetAll();
                 _response.SetSuccess();
-                _response.Message = restaurantsDTO.Any() ?
-                    "Lista do(s) Restaurante(s) obtida com sucesso." :
-                    "Nenhum Restaurante encontrado.";
-                _response.Data = restaurantsDTO;
+                _response.Message = usersDTO.Any() ?
+                    "Lista do(s) Usuário(s) obtida com sucesso." :
+                    "Nenhum Usuário encontrado.";
+                _response.Data = usersDTO;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.SetError();
-                _response.Message = "Não foi possível adquirir a lista do(s) Restaurante(s)!";
+                _response.Message = "Não foi possível adquirir a lista do(s) Usuário(s)!";
                 _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
 
         [HttpGet("GetById/{id:int}")]
-        public async Task<ActionResult<RestaurantDTO>> GetById(int id)
+        public async Task<ActionResult<UserDTO>> GetById(int id)
         {
             try
             {
-                var restaurantDTO = await _restaurantService.GetById(id);
-                if (restaurantDTO == null)
+                var userDTO = await _userService.GetById(id);
+                if (userDTO == null)
                 {
                     _response.SetNotFound();
-                    _response.Message = "Restaurante não encontrado!";
-                    _response.Data = restaurantDTO;
+                    _response.Message = "Usuário não encontrado!";
+                    _response.Data = userDTO;
                     return NotFound(_response);
                 };
 
                 _response.SetSuccess();
-                _response.Message = "Restaurante " + restaurantDTO.NameRestaurant + " obtido com sucesso.";
-                _response.Data = restaurantDTO;
+                _response.Message = "Usuário " + userDTO.NameUser + " obtido com sucesso.";
+                _response.Data = userDTO;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.SetError();
-                _response.Message = "Não foi possível adquirir o Restaurante informado!";
+                _response.Message = "Não foi possível adquirir o Usuário informado!";
+                _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
+        [HttpGet("GetByToken/{token}")]
+        public async Task<ActionResult<UserDTO>> GetByToken(string token)
+        {
+            try
+            {
+                var tokenObject = new Token { TokenAccess = token };
+                var email = tokenObject.ExtractSubject();
+
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var user = await _userService.GetByEmail(email);
+
+                    if (user != null)
+                    {
+                        _response.SetSuccess();
+                        _response.Message = "Usuário " + user.NameUser + " obtido com sucesso.";
+                        _response.Data = user;
+                        return Ok(_response);
+                    }
+
+                    _response.SetUnauthorized();
+                    _response.Message = "Token inválido!";
+                    _response.Data = new { errorToken = "Token inválido!" };
+                    return BadRequest(_response);
+                }
+
+                _response.SetUnauthorized();
+                _response.Message = "Token inválido!";
+                _response.Data = new { errorToken = "Token inválido!" };
+                return BadRequest(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.SetError();
+                _response.Message = "Não foi possível adquirir o Usuário informado!";
                 _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<RestaurantDTO>> Create([FromBody] RestaurantDTO restaurantDTO)
+        public async Task<ActionResult<UserDTO>> Create([FromBody] UserDTO userDTO)
         {
-            if (restaurantDTO == null)
+            if (userDTO == null)
             {
                 _response.SetInvalid();
                 _response.Message = "Dado(s) inválido(s)!";
-                _response.Data = restaurantDTO;
+                _response.Data = userDTO;
                 return BadRequest(_response);
             }
-            restaurantDTO.Id = 0;
+            userDTO.Id = 0;
 
             try
             {
                 dynamic errors = new ExpandoObject();
                 var hasErrors = false;
 
-                CheckDatas(restaurantDTO, ref errors, ref hasErrors);
+                CheckDatas(userDTO, ref errors, ref hasErrors);
 
                 if (hasErrors)
                 {
@@ -98,8 +138,8 @@ namespace CourseGuide.Controllers
                     return BadRequest(_response);
                 }
 
-                var restaurantsDTO = await _restaurantService.GetAll();
-                CheckDuplicates(restaurantsDTO, restaurantDTO, ref errors, ref hasErrors);
+                var usersDTO = await _userService.GetAll();
+                CheckDuplicates(usersDTO, userDTO, ref errors, ref hasErrors);
 
                 if (hasErrors)
                 {
@@ -109,17 +149,102 @@ namespace CourseGuide.Controllers
                     return BadRequest(_response);
                 }
 
-                await _restaurantService.Create(restaurantDTO);
+                userDTO.PasswordUser = userDTO.PasswordUser.HashPassword();
+                await _userService.Create(userDTO);
 
                 _response.SetSuccess();
-                _response.Message = "Restaurante " + restaurantDTO.NameRestaurant + " cadastrado com sucesso.";
-                _response.Data = restaurantDTO;
+                _response.Message = "Usuário " + userDTO.NameUser + " cadastrado com sucesso.";
+                _response.Data = userDTO;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.SetError();
-                _response.Message = "Não foi possível cadastrar o Restaurante!";
+                _response.Message = "Não foi possível cadastrar o Usuário!";
+                _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<Token>> Login([FromBody] Login login)
+        {
+            if (login is null)
+            {
+                _response.SetInvalid();
+                _response.Message = "Dado(s) inválido(s)!";
+                _response.Data = login;
+                return BadRequest(_response);
+            }
+
+            try
+            {
+                login.Password = login.Password.HashPassword();
+                var userDTO = await _userService.Login(login);
+                if (userDTO is null)
+                {
+                    _response.SetUnauthorized();
+                    _response.Message = "Login inválido!";
+                    _response.Data = new { errorLogin = "Login inválido!" };
+                    return BadRequest(_response);
+                }
+
+                var token = new Token();
+                token.GenerateToken(userDTO.EmailUser);
+
+                _response.SetSuccess();
+                _response.Message = "Login realizado com sucesso.";
+                _response.Data = token;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.SetError();
+                _response.Message = "Não foi possível realizar o Login!";
+                _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
+        [HttpPost("Validate")]
+        public async Task<ActionResult<Token>> Validate([FromBody] Token token)
+        {
+            if (token is null)
+            {
+                _response.SetInvalid();
+                _response.Message = "Dado inválido!";
+                _response.Data = token;
+                return BadRequest(_response);
+            }
+
+            try
+            {
+                var email = token.ExtractSubject();
+
+                if (string.IsNullOrEmpty(email) || await _userService.GetByEmail(email) == null)
+                {
+                    _response.SetUnauthorized();
+                    _response.Message = "Token inválido!";
+                    _response.Data = new { errorToken = "Token inválido!" };
+                    return BadRequest(_response);
+                }
+                else if (!token.ValidateToken())
+                {
+                    _response.SetUnauthorized();
+                    _response.Message = "Token inválido!";
+                    _response.Data = new { errorToken = "Token inválido!" };
+                    return BadRequest(_response);
+                }
+
+                _response.SetSuccess();
+                _response.Message = "Token validado com sucesso.";
+                _response.Data = token;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.SetError();
+                _response.Message = "Não foi possível validar o Token!";
                 _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
@@ -127,31 +252,31 @@ namespace CourseGuide.Controllers
 
 
         [HttpPut("Update")]
-        public async Task<ActionResult<RestaurantDTO>> Update([FromBody] RestaurantDTO restaurantDTO)
+        public async Task<ActionResult<UserDTO>> Update([FromBody] UserDTO userDTO)
         {
-            if (restaurantDTO == null)
+            if (userDTO == null)
             {
                 _response.SetInvalid();
                 _response.Message = "Dado(s) inválido(s)!";
-                _response.Data = restaurantDTO;
+                _response.Data = userDTO;
                 return BadRequest(_response);
             }
 
             try
             {
-                var existingRestaurantDTO = await _restaurantService.GetById(restaurantDTO.Id);
-                if (existingRestaurantDTO == null)
+                var existingUserDTO = await _userService.GetById(userDTO.Id);
+                if (existingUserDTO == null)
                 {
                     _response.SetNotFound();
                     _response.Message = "Dado(s) com conflito!";
-                    _response.Data = new { errorId = "O Restaurante informado não existe!" };
+                    _response.Data = new { errorId = "O Usuário informado não existe!" };
                     return NotFound(_response);
                 }
 
                 dynamic errors = new ExpandoObject();
                 var hasErrors = false;
 
-                CheckDatas(restaurantDTO, ref errors, ref hasErrors);
+                CheckDatas(userDTO, ref errors, ref hasErrors);
 
                 if (hasErrors)
                 {
@@ -161,8 +286,8 @@ namespace CourseGuide.Controllers
                     return BadRequest(_response);
                 }
 
-                var restaurantsDTO = await _restaurantService.GetAll();
-                CheckDuplicates(restaurantsDTO, restaurantDTO, ref errors, ref hasErrors);
+                var usersDTO = await _userService.GetAll();
+                CheckDuplicates(usersDTO, userDTO, ref errors, ref hasErrors);
 
                 if (hasErrors)
                 {
@@ -172,85 +297,86 @@ namespace CourseGuide.Controllers
                     return BadRequest(_response);
                 }
 
-                await _restaurantService.Update(restaurantDTO);
+                userDTO.PasswordUser = existingUserDTO.PasswordUser;
+                await _userService.Update(userDTO);
 
                 _response.SetSuccess();
-                _response.Message = "Restaurante " + restaurantDTO.NameRestaurant + " alterado com sucesso.";
-                _response.Data = restaurantDTO;
+                _response.Message = "Usuário " + userDTO.NameUser + " alterado com sucesso.";
+                _response.Data = userDTO;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.SetError();
-                _response.Message = "Não foi possível alterar o Restaurante!";
+                _response.Message = "Não foi possível alterar o Usuário!";
                 _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
 
         [HttpDelete("Delete/{id:int}")]
-        public async Task<ActionResult<RestaurantDTO>> Delete(int id)
+        public async Task<ActionResult<UserDTO>> Delete(int id)
         {
             try
             {
-                var restaurantDTO = await _restaurantService.GetById(id);
-                if (restaurantDTO == null)
+                var userDTO = await _userService.GetById(id);
+                if (userDTO == null)
                 {
                     _response.SetNotFound();
                     _response.Message = "Dado com conflito!";
-                    _response.Data = new { errorId = "Restaurante não encontrado!" };
+                    _response.Data = new { errorId = "Usuário não encontrado!" };
                     return NotFound(_response);
                 }
 
-                await _restaurantService.Delete(restaurantDTO);
+                await _userService.Delete(userDTO);
 
                 _response.SetSuccess();
-                _response.Message = "Restaurante " + restaurantDTO.NameRestaurant + " excluído com sucesso.";
-                _response.Data = restaurantDTO;
+                _response.Message = "Usuário " + userDTO.NameUser + " excluído com sucesso.";
+                _response.Data = userDTO;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.SetError();
-                _response.Message = "Não foi possível excluir o Restaurante!";
+                _response.Message = "Não foi possível excluir o Usuário!";
                 _response.Data = new { ErrorMessage = ex.Message, StackTrace = ex.StackTrace ?? "No stack trace available!" };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
 
-        private static void CheckDatas(RestaurantDTO restaurantDTO, ref dynamic errors, ref bool hasErrors)
+        private static void CheckDatas(UserDTO userDTO, ref dynamic errors, ref bool hasErrors)
         {
-            if (!ValidatorUtilitie.CheckValidPhone(restaurantDTO.PhoneRestaurant))
+            if (!ValidatorUtilitie.CheckValidPhone(userDTO.PhoneUser))
             {
-                errors.errorPhoneRestaurant = "Número inválido!";
+                errors.errorPhoneUser = "Número inválido!";
                 hasErrors = true;
             }
 
-            int status = ValidatorUtilitie.CheckValidEmail(restaurantDTO.EmailRestaurant);
+            int status = ValidatorUtilitie.CheckValidEmail(userDTO.EmailUser);
             if (status == -1)
             {
-                errors.errorEmailRestaurant = "E-mail inválido!";
+                errors.errorEmailUser = "E-mail inválido!";
                 hasErrors = true;
             }
             else if (status == -2)
             {
-                errors.errorEmailRestaurant = "Domínio inválido!";
+                errors.errorEmailUser = "Domínio inválido!";
                 hasErrors = true;
             }
         }
 
-        private static void CheckDuplicates(IEnumerable<RestaurantDTO> restaurantsDTO, RestaurantDTO restaurantDTO, ref dynamic errors, ref bool hasErrors)
+        private static void CheckDuplicates(IEnumerable<UserDTO> usersDTO, UserDTO userDTO, ref dynamic errors, ref bool hasErrors)
         {
-            foreach (var restaurant in restaurantsDTO)
+            foreach (var user in usersDTO)
             {
-                if (restaurantDTO.Id == restaurant.Id)
+                if (userDTO.Id == user.Id)
                 {
                     continue;
                 }
 
-                if (ValidatorUtilitie.CompareString(restaurantDTO.EmailRestaurant, restaurant.EmailRestaurant))
+                if (ValidatorUtilitie.CompareString(userDTO.EmailUser, user.EmailUser))
                 {
-                    errors.errorEmailRestaurant = "O e-mail " + restaurantDTO.EmailRestaurant + " já está sendo utilizado!";
+                    errors.errorEmailUser = "O e-mail " + userDTO.EmailUser + " já está sendo utilizado!";
                     hasErrors = true;
 
                     break;

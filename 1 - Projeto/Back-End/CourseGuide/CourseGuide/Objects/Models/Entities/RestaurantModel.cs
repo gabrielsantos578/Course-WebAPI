@@ -18,10 +18,12 @@ namespace CourseGuide.Objects.Models.Entities
         [Column("phonerestaurant")]
         public string PhoneRestaurant { get; set; }
 
-        [Column("iduser")]
+        [Column("idowner")]
         public int IdOwner { get; set; }
 
 
         public UserModel? OwnerModel { get; set; }
+
+        public ICollection<TableModel>? TablesModel { get; set; }
     }
 }

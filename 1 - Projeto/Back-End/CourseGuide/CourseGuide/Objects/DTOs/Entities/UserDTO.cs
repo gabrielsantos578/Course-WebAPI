@@ -1,5 +1,6 @@
 ﻿using CourseGuide.Objects.Generics;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CourseGuide.Objects.DTOs.Entities
 {
@@ -31,5 +32,9 @@ namespace CourseGuide.Objects.DTOs.Entities
         [MinLength(14)]
         [MaxLength(15)]
         public string PhoneUser { get; set; }
+
+
+        [JsonIgnore]
+        public ICollection<RestaurantDTO>? RestaurantsDTO { get; set; }
     }
 }
